@@ -1,0 +1,84 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("D:/python_work/text_book/algorithms_from_scratch/dataset.csv")
+
+"""
+Splitting the data into train/test sets. 70% train/30% test.
+This is good practice to avoid overfitting.
+"""
+# .values converts the dataframe to numpy array. Makes it easier to shuffle and split
+df = df.values
+
+np.random.seed(5)
+np.random.shuffle(df) # shuffles only rows:
+train = df[0:int(0.7*len(df))] #rows
+test = df[int(0.7*len(df)):int(len(df))]
+
+x_train = train[:, 0:3]
+y_train = train[:, 3]
+
+x_test = test[:, 0:3]
+y_test = test[:, 3]
+
+"""
+Training the perceptron.
+The output will be the weights (w) and the sum-of-squared error loss function (J).
+"""
+def perceptron_train(x, y, z, eta, t):
+    '''
+    Input Parameters:
+        x: data set of input features
+        y: actual outputs
+        z: activation function threshold
+        eta: learning rate
+        t: number of iterations
+    '''
+
+    # initializing the weights
+    w = np.zeros(len(x[0]))
+    n = 0
+
+    # initializing additional parameters to compute sum-of-squared errors
+    yhat_vec = np.ones(len(y))     # vector for predictions
+    errors = np.ones(len(y))       # vector for errors (actual - predictions)
+    J = []                         # vector for the SSE cost function
+
+    while n < t:
+        for i in range(0, len(x)):
+
+            # dot product
+            f = np.dot(x[i], w)
+
+            # activation function
+            if f >= z:
+                yhat = 1.
+            else:
+                yhat = 0.
+            yhat_vec[i] = yhat
+
+            # updating the weights
+            for j in range(0, len(w)):
+                w[j] = w[j] + eta*(y[i]-yhat)*x[i][j]
+
+        n += 1
+        # computing the sum-of-squared errors
+        #for i in xrange(0,len(y)): #        #for i in xrange(0,len(y)):
+        for i in range(0, len(y)):
+           errors[i] = (y[i]-yhat_vec[i])**2
+        J.append(0.5*np.sum(errors))
+
+    return w, J
+
+z = 0.0
+eta = 0.1
+t = 50
+
+perceptron_train(x_train, y_train, z, eta, t)
+
+w = perceptron_train(x_train, y_train, z, eta, t)[0]
+J = perceptron_train(x_train, y_train, z, eta, t)[1]
+
+print("w is ",w)
+print("J is ", J)
