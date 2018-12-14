@@ -1,0 +1,12 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("D:/python_work/text_book/algorithms_from_scratch/dataset.csv")
+
+"""
+Taking a look at the data using a scatterplot.
+It's clearly linearly separable.
+"""
+plt.figure(0) #0 -> title
+plt.scatter(df.values[:,1], df.values[:,2], c = df['3'], alpha=0.8) #c ->color, sequence, or sequence of color, optional
+plt.show()
