@@ -1,0 +1,45 @@
+x = [[1., 0.,0.,],
+    [1., 0.,1.,],
+    [1., 1.,0.,],
+    [1., 1.,1.,],]
+y = [1.,
+     1.,
+     1.,
+     0.,]
+
+import numpy as np
+
+def perceptron(x, y, z, eta, t):
+    w = np.zeros(len(x[0]))
+    n = 0
+    yhat_vec = np.ones(len(y)) #prediction
+    errors = np.ones(len(y))
+    J = []
+    while n < t: # t -> iter
+        for i in range(len(x)): #num of rows
+            f = np.dot(w, x[i])
+
+            if f > z:
+                yhat = 1.
+            else:
+                yhat = 0.
+            yhat_vec[i] = yhat
+
+            for j in range(0, len(w)): #for all weight,
+                w[j] = w[j] + eta*(y[i] - yhat)*x[i][j] #all feature
+        n = n + 1
+        # computing the sum-of-squared errors
+        for i in range(len(y)):
+            errors[i] = (y[i] - yhat_vec[i]) ** 2
+        J.append(0.5 * np.sum(errors))
+    return (w,J)
+
+z = 0.0
+eta = 0.1
+t = 50
+
+print ("The weights are:")
+print (perceptron(x, y, z, eta, t)[0])
+
+print ("The errors are:")
+print (perceptron(x, y, z, eta, t)[1])
